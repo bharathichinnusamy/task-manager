@@ -1,5 +1,6 @@
 const express = require('express')
 const Task = require('../models/tasks')
+const { findById } = require('../models/users')
 
 const router = new express.Router()
 
@@ -45,7 +46,11 @@ router.patch('/tasks/:id', async (req, res) => {
         return res.status(400).send("invalid fields!")
     }
     try {
-        const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const task = await Task.findById(req.params.id)
+        updates.forEach((update) => task[update] = req.body[update])
+
+        await task.save()
+
         if (!task) {
             return res.status(404).send()
         }
