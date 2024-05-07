@@ -6,6 +6,20 @@ const taskRouter = require('../routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
+// app.use((req, res, next) => {
+//     if (req.method === "GET") {
+//         res.send("GET requests are disabled")
+//     }
+//     else {
+//         next()
+//     }
+
+// })
+app.use((req, res, next) => {
+    res.status(503).send("This site is under maintainence please try later!")
+
+})
+
 app.use(express.json())
 app.use(userRouter)
 app.use(taskRouter)
@@ -16,16 +30,14 @@ app.listen(port, () => {
 
 })
 
-const bcript = require('bcryptjs')
+// const jwt = require('jsonwebtoken')
 
 // const myFunction = async () => {
-//     const password = 'Bharathi'
-//     const hasedPassword = await bcript.hash(password, 8)
-//     console.log(password)
-//     console.log(hasedPassword)
 
-//     const isMatch = await bcript.compare('Barathi', hasedPassword)
-//     console.log(isMatch)
+//     const token = jwt.sign({ _id: "red1234" }, "mynewwork",{expiresIn:'7days'})
+//     console.log(token)
+//     const data = jwt.verify(token, 'mynewwork')
+//     console.log(data)
 
 // }
 
