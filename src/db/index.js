@@ -2,6 +2,7 @@ const express = require('express')
 require('./mongoose')
 const userRouter = require('../routers/user')
 const taskRouter = require('../routers/task')
+const { findById } = require('../models/users')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -29,16 +30,17 @@ app.listen(port, () => {
     console.log("server is up on port " + port)
 
 })
+// const Task = require('../models/tasks')
+// const User = require('../models/users')
+// const main = async () => {
+//     // const task=await Task.findById('663c35782afa8ac09c18c97c')
+//     // //console.log(task)
+//     // await task.populate('owner').execPopulate()
+//     // console.log(task.owner)
 
-// const jwt = require('jsonwebtoken')
-
-// const myFunction = async () => {
-
-//     const token = jwt.sign({ _id: "red1234" }, "mynewwork",{expiresIn:'7days'})
-//     console.log(token)
-//     const data = jwt.verify(token, 'mynewwork')
-//     console.log(data)
+//     const user = await User.findById('663c3258431c21bce321c68d')
+//     await user.populate('task').execPopulate()
+//     console.log(user.task)
 
 // }
-
-// myFunction()
+// main()

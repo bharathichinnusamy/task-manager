@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('../models/tasks')
 
 const userShema = new mongoose.Schema({
     name: {
@@ -52,14 +53,26 @@ const userShema = new mongoose.Schema({
 
     }]
 })
+userShema.virtual('task', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
+userShema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
 
 userShema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, "mynewcourse")
-    user.tokens=user.tokens.concat({token})
+    user.tokens = user.tokens.concat({ token })
     await user.save()
     return token
-
 }
 
 userShema.statics.findByCredentials = async (email, password) => {
@@ -88,6 +101,13 @@ userShema.pre('save', async function (next) {
 
 })
 
+//Delete user tasks when user is removed
+userShema.pre('remove', async function (next) {
+    const user = this
+    await Task.deleteMany({ owner: user._id })
+    next()
+
+})
 const User = mongoose.model('User', userShema)
 
 module.exports = User
